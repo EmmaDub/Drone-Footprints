@@ -10,7 +10,12 @@ import Utils.config as config
 from loguru import logger
 import lensfunpy
 
-
+def rotate_image(cv_img, angle):
+    height, width = cv_img.shape[:2]
+    center = (width // 2, height // 2)
+    rot_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
+    rotated = cv2.warpAffine(cv_img, rot_matrix, (width, height), flags=cv2.INTER_LINEAR)
+    return rotated
 #def set_raster_extents(image_path, dst_utf8_path, coordinate_array):
 def set_raster_extents(image):
     try:
@@ -73,6 +78,7 @@ def set_raster_extents(image):
             adjImg = cv2.cvtColor(img_undistorted, cv2.COLOR_BGR2RGB)
         else:
             adjImg = cv2.cvtColor(img_undistorted, cv2.COLOR_BGR2RGBA)
+        
 
         rectify_and_warp_to_geotiff(adjImg, image.geotiff_file, fixed_polygon, image.coord_array)
     except FileNotFoundError as e:
@@ -80,6 +86,8 @@ def set_raster_extents(image):
     except Exception as e:
         logger.exception(f"Error opening or processing image: {e}")
 
+    # --- ajout de la rotation selon le flight yaw ---
+    adjImg = rotate_image(adjImg, -image.flight_yaw_degree)
 
 def rectify_and_warp_to_geotiff(jpeg_img_array, geotiff_file, fixed_polygon, coordinate_array):
     """
