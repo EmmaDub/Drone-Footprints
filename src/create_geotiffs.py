@@ -81,6 +81,9 @@ def set_raster_extents(image):
         
 
         adjImg = rotate_image(adjImg, -image.flight_yaw_degree)
+
+    # Projeté et sauvegardé en GeoTIFF
+        rectify_and_warp_to_geotiff(adjImg, image.geotiff_file, fixed_polygon, image.coord_array)
     except FileNotFoundError as e:
         logger.exception(f"File not found: {image.image_path}. {e}")
     except Exception as e:
