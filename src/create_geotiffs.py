@@ -80,14 +80,11 @@ def set_raster_extents(image):
             adjImg = cv2.cvtColor(img_undistorted, cv2.COLOR_BGR2RGBA)
         
 
-        rectify_and_warp_to_geotiff(adjImg, image.geotiff_file, fixed_polygon, image.coord_array)
+        adjImg = rotate_image(adjImg, -image.flight_yaw_degree)
     except FileNotFoundError as e:
         logger.exception(f"File not found: {image.image_path}. {e}")
     except Exception as e:
         logger.exception(f"Error opening or processing image: {e}")
-
-    # --- ajout de la rotation selon le flight yaw ---
-    adjImg = rotate_image(adjImg, -image.flight_yaw_degree)
 
 def rectify_and_warp_to_geotiff(jpeg_img_array, geotiff_file, fixed_polygon, coordinate_array):
     """
