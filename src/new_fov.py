@@ -109,9 +109,9 @@ class HighAccuracyFOVCalculator:
         self.image.find_declination()
         declination = self.image.declination
 
-        adj_yaw, adj_pitch, adj_roll = self.calculate_rads_from_angles(self.image.gimbal_yaw_degree,
-                                                                       self.image.gimbal_pitch_degree,
-                                                                       self.image.gimbal_roll_degree,
+        adj_yaw, adj_pitch, adj_roll = self.calculate_rads_from_angles(self.flight_yaw_degree,
+                                                                       self.flight_pitch_degree,
+                                                                       self.flight_roll_degree,
                                                                        declination)
 
         q = quaternion.from_euler_angles(adj_yaw, adj_pitch, adj_roll)
